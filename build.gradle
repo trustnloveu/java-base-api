@@ -28,8 +28,8 @@ sourceSets {
 
 project(':main-api') {
     dependencies {
-        implementation project(':module-file')
-        implementation project(':module-file-util')
-        implementation project(':module-exception-monitoring')
+        implementation project(':java-module-file')
+        implementation project(':java-module-file-util')
+        implementation project(':java-module-exception-monitoring')
     }
 }

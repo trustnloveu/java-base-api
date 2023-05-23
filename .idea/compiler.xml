@@ -8,9 +8,10 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.26/8f8cf0372abf564913e9796623aac4c8ea44025a/lombok-1.18.26.jar" />
         </processorPath>
+        <module name="file-api.java-module-file.main" />
+        <module name="file-api.java-module-file-util.main" />
         <module name="file-api.main-api.main" />
-        <module name="file-api.module-file.main" />
-        <module name="file-api.module-file-util.main" />
+        <module name="file-api.java-module-exception-monitoring.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="17" />

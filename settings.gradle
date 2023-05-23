@@ -1,5 +1,5 @@
 rootProject.name = 'file-api'
 include 'main-api'
-include 'module-file'
-include 'module-file-util'
-include 'module-exception-monitoring'
+include 'java-module-file'
+include 'java-module-file-util'
+include 'java-module-exception-monitoring'
