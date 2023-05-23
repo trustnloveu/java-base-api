@@ -1,0 +1,35 @@
+plugins {
+    id 'java-library'
+}
+
+allprojects {
+    group = 'kr.co.ejyang'
+    version = '1.0'
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
+
+    apply plugin: 'java-library'
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+ext.profile = (!project.hasProperty('profile') || !profile) ? 'local' : profile
+
+sourceSets {
+    main {
+        resources {
+            srcDirs "src/main/resources/resources-${profile}"
+            exclude "resources-*"
+        }
+    }
+}
+
+project(':main-api') {
+    dependencies {
+        implementation project(':module-file')
+        implementation project(':module-file-util')
+        implementation project(':module-exception-monitoring')
+    }
+}
