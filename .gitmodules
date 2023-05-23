@@ -7,12 +7,12 @@
 [submodule "module-exception-monitoring"]
 	path = module-exception-monitoring
 	url = https://github.com/trustnloveu/java-module-exception-monitoring.git
-[submodule "java-module-file"]
-	path = java-module-file
+[submodule "module_file"]
+	path = module_file
 	url = https://github.com/trustnloveu/java-module-file.git
-[submodule "java-module-file-util"]
-	path = java-module-file-util
+[submodule "module_file_util"]
+	path = module_file_util
 	url = https://github.com/trustnloveu/java-module-file-util.git
-[submodule "java-module-exception-monitoring"]
-	path = java-module-exception-monitoring
+[submodule "module_exception_monitoring"]
+	path = module_exception_monitoring
 	url = https://github.com/trustnloveu/java-module-exception-monitoring.git

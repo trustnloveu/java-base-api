@@ -26,10 +26,10 @@ sourceSets {
     }
 }
 
-project(':main-api') {
+project(':main_api') {
     dependencies {
-        implementation project(':java-module-file')
-        implementation project(':java-module-file-util')
-        implementation project(':java-module-exception-monitoring')
+        implementation project(':module_file')
+        implementation project(':module_file_util')
+        implementation project(':module_exception_monitoring')
     }
 }

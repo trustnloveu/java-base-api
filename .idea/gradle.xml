@@ -9,10 +9,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/java-module-exception-monitoring" />
-            <option value="$PROJECT_DIR$/java-module-file" />
-            <option value="$PROJECT_DIR$/java-module-file-util" />
-            <option value="$PROJECT_DIR$/main-api" />
+            <option value="$PROJECT_DIR$/main_api" />
+            <option value="$PROJECT_DIR$/module_exception_monitoring" />
+            <option value="$PROJECT_DIR$/module_file" />
+            <option value="$PROJECT_DIR$/module_file_util" />
           </set>
         </option>
       </GradleProjectSettings>

@@ -17,10 +17,10 @@
 
 ```shell
 file-api
-    ├── main-api
-    ├── java-module-file
-    ├── java-module-file-util
-    └── java-module-exception-monitoring
+    ├── main_api
+    ├── module_file
+    ├── module_file_util
+    └── module_exception_monitoring
 ```
 
 * main-api            : 컨트롤러(Controller), API In/Out 관리
