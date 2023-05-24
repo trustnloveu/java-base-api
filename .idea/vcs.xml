@@ -2,8 +2,8 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/java-module-exception-monitoring" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/java-module-file" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/java-module-file-util" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/module_exception_monitoring" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/module_file" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/module_file_util" vcs="Git" />
   </component>
 </project>

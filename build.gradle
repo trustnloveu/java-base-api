@@ -2,6 +2,7 @@ plugins {
     id 'java-library'
 }
 
+// 전역 설정
 allprojects {
     group = 'kr.co.ejyang'
     version = '1.0'
@@ -15,17 +16,30 @@ allprojects {
     }
 }
 
+// Profile 정보
 ext.profile = (!project.hasProperty('profile') || !profile) ? 'local' : profile
 
+// Resources 등록
 sourceSets {
     main {
         resources {
             srcDirs "src/main/resources/resources-${profile}"
-            exclude "resources-*"
         }
     }
 }
 
+// module_exception_monitoring > SQL 등록
+project(':module_exception_monitoring') {
+    sourceSets {
+        main {
+            resources {
+                srcDirs "src/main/resources/sql"
+            }
+        }
+    }
+}
+
+// 프로젝트 구조
 project(':main_api') {
     dependencies {
         implementation project(':module_file')

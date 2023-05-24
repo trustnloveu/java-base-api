@@ -1,11 +1,12 @@
 package kr.co.ejyang.main_api.exception;
 
-import kr.co.ejyang.module_file.exception.FileUploadException;
 import kr.co.ejyang.main_api.model.ApiResponse;
-import lombok.RequiredArgsConstructor;
+import kr.co.ejyang.module_exception_monitoring.service.MonitoringServiceImpl;
+import kr.co.ejyang.module_file.exception.FileUploadException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.validation.BindingResult;
@@ -20,15 +21,23 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @RestControllerAdvice
-@RequiredArgsConstructor
 class ControllerExceptionHandler {
 
     private static final Logger log = LogManager.getLogger(ControllerExceptionHandler.class);
+
+    private final MonitoringServiceImpl monitoringService;
+
+    ControllerExceptionHandler(@Autowired MonitoringServiceImpl monitoringService) {
+        this.monitoringService = monitoringService;
+    }
 
     // 글로벌 에러
     @ExceptionHandler( value = Exception.class)
     public ResponseEntity<?> globalException(Exception e) {
         log.error(ExceptionUtils.getStackTrace(e));
+
+        monitoringService.insertExceptionHistory("appName", "level", "type", "detail");
+
         return ResponseEntity.status(500).body(new ApiResponse<>("server error","500",500));
     }
 
@@ -57,6 +66,8 @@ class ControllerExceptionHandler {
         for (FieldError fieldError : bindingResult.getFieldErrors()) {
             messageList.add("[ " + fieldError.getDefaultMessage() + " ]");
         }
+
+        monitoringService.insertExceptionHistory("appName", "temp", "type", "detail");
 
         return ResponseEntity.status(500).body(new ApiResponse<>(String.join(", ", messageList),"400",400));
     }
