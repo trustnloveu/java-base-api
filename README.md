@@ -23,9 +23,10 @@ file-api
     └── module_exception_monitoring
 ```
 
-* main-api            : 컨트롤러(Controller), API In/Out 관리
-* module-file         : 파일 업로드, 삭제, 다운로드 서비스 모듈 (현재 Local 스토리지만 구현)
-* module-file-util    : 파일 관련 유틸 모듈 (파일 유혀성 검증, 파일명 변환)
+* main-api                      : 컨트롤러(Controller), API In/Out 관리
+* module-file                   : 파일 업로드, 삭제, 다운로드 서비스 모듈 (현재 Local 스토리지만 구현)
+* module-file-util              : 파일 관련 유틸 모듈 (파일 유혀성 검증, 파일명 변환)
+* module_exception_monitoring   : Exception 후처리 모듈 ( DB Insert )
 
 
 
