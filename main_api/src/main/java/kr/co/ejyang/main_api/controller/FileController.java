@@ -17,25 +17,29 @@ import org.springframework.web.multipart.MultipartFile;
 @Validated
 @RestController
 @RequestMapping("/file")
-public class MainController {
+public class FileController {
 
     private final MainService mainService;
 
     // 생성자
-    MainController(@Autowired MainService mainService) {
+    FileController(@Autowired MainService mainService) {
         this.mainService = mainService;
     }
 
 
     /*******************************************************************************************
-     * 파일 정보 가져오기
+     * 파일 조회 - 임시 URL 발급
      *******************************************************************************************/
-    @PostMapping("/get-file-info")
-    public ResponseEntity getFileInfo(
-            @RequestParam(value = "file") MultipartFile file
-    ) {
-        return new ResponseEntity<>(mainService.getFileInfo(file), HttpStatus.OK);
+    @PostMapping("/get-file-url")
+    public ResponseEntity generateFileTempUrl() {
+
+        // Redis > Temp Url 등록
+        String redisKey = "";
+//        String redisKey = fileService.updateRedisTempUrl(paramMap);
+
+        return new ResponseEntity<>(redisKey, HttpStatus.OK);
     }
+
 
     /*******************************************************************************************
      * 단일 파일 업로드 (1) - 파일 자체 이름으로 저장
