@@ -16,3 +16,6 @@
 [submodule "module_exception_monitoring"]
 	path = module_exception_monitoring
 	url = https://github.com/trustnloveu/java-module-exception-monitoring.git
+[submodule "module_redis"]
+	path = module_redis
+	url = https://github.com/trustnloveu/java-module-redis.git

@@ -45,5 +45,6 @@ project(':main_api') {
         implementation project(':module_file')
         implementation project(':module_file_util')
         implementation project(':module_exception_monitoring')
+        implementation project(':module_redis')
     }
 }

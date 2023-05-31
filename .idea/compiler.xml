@@ -11,6 +11,7 @@
         <module name="file-api.main_api.main" />
         <module name="file-api.module_file_util.main" />
         <module name="file-api.module_exception_monitoring.main" />
+        <module name="file-api.module_redis.main" />
         <module name="file-api.module_file.main" />
       </profile>
     </annotationProcessing>
