@@ -28,16 +28,11 @@ public class FileController {
 
 
     /*******************************************************************************************
-     * 파일 조회 - 임시 URL 발급
+     * 파일 조회 - 임시 URL 발급 ( Redis > Temp Url 등록 )
      *******************************************************************************************/
     @PostMapping("/get-file-url")
     public ResponseEntity generateFileTempUrl() {
-
-        // Redis > Temp Url 등록
-        String redisKey = "";
-//        String redisKey = fileService.updateRedisTempUrl(paramMap);
-
-        return new ResponseEntity<>(redisKey, HttpStatus.OK);
+        return new ResponseEntity<>(mainService.updateFileTempUrlOnRedis(), HttpStatus.OK);
     }
 
 

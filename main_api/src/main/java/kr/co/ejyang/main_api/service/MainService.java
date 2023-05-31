@@ -3,6 +3,7 @@ package kr.co.ejyang.main_api.service;
 import kr.co.ejyang.main_api.dto.FileParamDto;
 import kr.co.ejyang.module_file.domain.FileDto;
 import kr.co.ejyang.module_file.service.FileServiceImplForLocal;
+import kr.co.ejyang.module_file_util.util.FileCommonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -11,17 +12,22 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-//import static kr.co.ejyang.module_file.config.CommonConsts.*;
+import static kr.co.ejyang.main_api.config.CommonConsts.*;
 
 @Service
 @Slf4j
 public class MainService {
 
     private final FileServiceImplForLocal fileService;
+    private final FileCommonUtil fileUtil;
 
     // 생성자
-    MainService(@Autowired FileServiceImplForLocal fileService) {
+    MainService(
+            @Autowired FileServiceImplForLocal fileService,
+            @Autowired FileCommonUtil fileUtil
+    ) {
         this.fileService = fileService;
+        this.fileUtil = fileUtil;
     }
 
     /*******************************************************************************************
@@ -57,6 +63,18 @@ public class MainService {
      *******************************************************************************************/
     public InputStreamResource downloadFile(String path) {
         return fileService.downloadFile(path);
+    }
+
+    /*******************************************************************************************
+     * 임시 URL 발급 ( Redis Key )
+     *******************************************************************************************/
+    public String updateFileTempUrlOnRedis() {
+
+        String tempUrl = RD_KEY_TEMP_URL_PREFIX + fileUtil.generateFileTempUrl();
+
+
+
+        return tempUrl;
     }
 
 }
