@@ -1,6 +1,7 @@
 package kr.co.ejyang.main_api.service;
 
 import kr.co.ejyang.main_api.dto.FileParamDto;
+import kr.co.ejyang.main_api.dto.FileRedisDto;
 import kr.co.ejyang.module_file.domain.FileDto;
 import kr.co.ejyang.module_file.service.FileServiceImplForLocal;
 import kr.co.ejyang.module_file_util.util.FileCommonUtil;
@@ -13,21 +14,21 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import static kr.co.ejyang.main_api.config.CommonConsts.*;
+import static kr.co.ejyang.main_api.config.CommonConsts.RD_KEY_TEMP_URL_PREFIX;
 
-@Service
 @Slf4j
-public class MainService {
+@Service
+public class FileService {
 
     private final FileServiceImplForLocal fileService;
     private final FileCommonUtil fileUtil;
     private final RedisUtil redisUtil;
 
     // 생성자
-    MainService(
-            @Autowired FileServiceImplForLocal fileService,
-            @Autowired FileCommonUtil fileUtil,
-            @Autowired RedisUtil redisUtil
+    FileService(
+        @Autowired FileServiceImplForLocal fileService,
+        @Autowired FileCommonUtil fileUtil,
+        @Autowired RedisUtil redisUtil
     ) {
         this.fileService = fileService;
         this.fileUtil = fileUtil;
@@ -72,12 +73,20 @@ public class MainService {
     /*******************************************************************************************
      * 임시 URL 발급 ( Redis Key )
      *******************************************************************************************/
-    public String updateFileTempUrlOnRedis() {
-
+    public String updateFileTempUrlOnRedis(String savePath, String saveName) {
+        // 임시 URL 생성
         String tempUrl = RD_KEY_TEMP_URL_PREFIX + fileUtil.generateFileTempUrl();
 
-        redisUtil.setRedisData(tempUrl, "temp");
+        // Redis Value 설정
+        FileRedisDto redisDto = FileRedisDto.builder()
+                .savePath(savePath)
+                .saveName(saveName)
+                .build();
 
+        // Redis 업데이트
+        redisUtil.setRedisData(tempUrl, redisDto.toString());
+
+        // 등록된 임시 URL 반환
         return tempUrl;
     }
 

@@ -1,8 +1,9 @@
 package kr.co.ejyang.main_api.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import kr.co.ejyang.main_api.dto.FileParamDto;
-import kr.co.ejyang.main_api.service.MainService;
+import kr.co.ejyang.main_api.service.FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -19,20 +20,25 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/file")
 public class FileController {
 
-    private final MainService mainService;
+    private final FileService fileService;
 
     // 생성자
-    FileController(@Autowired MainService mainService) {
-        this.mainService = mainService;
+    FileController(@Autowired FileService fileService) {
+        this.fileService = fileService;
     }
 
 
     /*******************************************************************************************
      * 파일 조회 - 임시 URL 발급 ( Redis > Temp Url 등록 )
      *******************************************************************************************/
-    @GetMapping("/get-file-url")
-    public ResponseEntity generateFileTempUrl() {
-        return new ResponseEntity<>(mainService.updateFileTempUrlOnRedis(), HttpStatus.OK);
+    @GetMapping("/get-file-url/{savePath}/{saveName}")
+    public ResponseEntity generateFileTempUrl(
+            @NotBlank
+            @PathVariable String savePath,
+            @NotBlank
+            @PathVariable String saveName
+    ) {
+        return new ResponseEntity<>(fileService.updateFileTempUrlOnRedis(savePath, saveName), HttpStatus.OK);
     }
 
 
@@ -45,7 +51,7 @@ public class FileController {
             @RequestPart(value = "param") FileParamDto.Upload param,
             @RequestParam(value = "file") MultipartFile file
     ) {
-        return new ResponseEntity<>(mainService.uploadSingleFileWithoutName(param, file), HttpStatus.OK);
+        return new ResponseEntity<>(fileService.uploadSingleFileWithoutName(param, file), HttpStatus.OK);
     }
 
     /*******************************************************************************************
@@ -57,7 +63,7 @@ public class FileController {
             @RequestPart(value = "param") FileParamDto.UploadWithName param,
             @RequestParam(value = "file") MultipartFile file
     ) {
-        return new ResponseEntity<>(mainService.uploadSingleFileWithName(param, file), HttpStatus.OK);
+        return new ResponseEntity<>(fileService.uploadSingleFileWithName(param, file), HttpStatus.OK);
     }
 
     /*******************************************************************************************
@@ -69,7 +75,7 @@ public class FileController {
             @RequestPart(value = "param") FileParamDto.Upload param,
             @RequestParam(value = "files") MultipartFile[] files
     ) {
-        return new ResponseEntity<>(mainService.uploadMultiFiles(param, files), HttpStatus.OK);
+        return new ResponseEntity<>(fileService.uploadMultiFiles(param, files), HttpStatus.OK);
     }
 
     /*******************************************************************************************
@@ -80,7 +86,7 @@ public class FileController {
             @Valid
             @RequestParam FileParamDto.Delete param
     ) {
-        mainService.deleteFile(param.savePath);
+        fileService.deleteFile(param.savePath);
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
@@ -102,7 +108,7 @@ public class FileController {
         // headers.add("Pragma", "no-cache");
         // headers.add("Expires", "0");
 
-        return new ResponseEntity<>(mainService.downloadFile(param.savePath), headers, HttpStatus.OK);
+        return new ResponseEntity<>(fileService.downloadFile(param.savePath), headers, HttpStatus.OK);
     }
 
 }
