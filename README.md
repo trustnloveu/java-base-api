@@ -18,6 +18,15 @@
 ```shell
 file-api
     ├── main_api
+    │   └── submodule
+    │       ├── module_exception_monitoring
+    │       │   └── ExceptionMonitoringUtil.java
+    │       ├── module_file
+    │       │   └── FileModuleUtil.java
+    │       ├── module_file_util
+    │       │   └── FileCommonUtilModuleUtil.java
+    │       └── module_redis
+    │           └── RedisModuleUtil.java
     ├── module_file
     ├── module_file_util
     ├── module_redis
@@ -29,6 +38,8 @@ file-api
 * `module_file_util`              : 파일 관련 유틸 모듈 (파일 유혀성 검증, 파일명 변환)
 * `module_redis`                  : Redis 연동 & 유틸 제공
 * `module_exception_monitoring`   : Exception 후처리 모듈 ( DB Insert )
+
+* `submodule`                     : 내부 모듈 호출부 ( 모듈별 별도 유틸 제공 )
 
 
 ## 프로젝트 빌드 & 배포 ( 도커 )
