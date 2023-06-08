@@ -2,10 +2,10 @@ package kr.co.ejyang.main_api.service;
 
 import kr.co.ejyang.main_api.dto.FileParamDto;
 import kr.co.ejyang.main_api.dto.FileRedisDto;
-import kr.co.ejyang.module_file.domain.FileDto;
-import kr.co.ejyang.module_file.service.FileServiceImplForLocal;
-import kr.co.ejyang.module_file_util.util.FileCommonUtil;
-import kr.co.ejyang.module_redis.util.RedisUtil;
+import kr.co.ejyang.main_api.dto.FileResponseDto;
+import kr.co.ejyang.main_api.submodule.module_file.FileModuleUtil;
+import kr.co.ejyang.main_api.submodule.module_file_util.FileCommonUtilModuleUtil;
+import kr.co.ejyang.main_api.submodule.module_redis.RedisModuleUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -20,54 +20,53 @@ import static kr.co.ejyang.main_api.config.CommonConsts.RD_KEY_TEMP_URL_PREFIX;
 @Service
 public class FileService {
 
-    private final FileServiceImplForLocal fileService;
-    private final FileCommonUtil fileUtil;
-    private final RedisUtil redisUtil;
+    private final FileModuleUtil fileModuleUtil;    // 파일 모듈
+    private final FileCommonUtilModuleUtil fileCommonUtilModuleUtil;      // 파일 모듈 유틸
+    private final RedisModuleUtil redisModuleUtil;    // 레디스 모듈
 
     // 생성자
     FileService(
-        @Autowired FileServiceImplForLocal fileService,
-        @Autowired FileCommonUtil fileUtil,
-        @Autowired RedisUtil redisUtil
+            @Autowired FileModuleUtil fileModuleUtil,
+            @Autowired FileCommonUtilModuleUtil fileCommonUtilModuleUtil,
+            @Autowired RedisModuleUtil redisModuleUtil
     ) {
-        this.fileService = fileService;
-        this.fileUtil = fileUtil;
-        this.redisUtil = redisUtil;
+        this.fileModuleUtil = fileModuleUtil;
+        this.fileCommonUtilModuleUtil = fileCommonUtilModuleUtil;
+        this.redisModuleUtil = redisModuleUtil;
     }
-
     /*******************************************************************************************
      * 단일 파일 업로드 - 파일명 입력 X
      *******************************************************************************************/
-    public FileDto uploadSingleFileWithoutName(FileParamDto.Upload param, MultipartFile file) {
-        return fileService.uploadSingleFile(param.savePath, file);
+    public FileResponseDto uploadSingleFileWithoutName(FileParamDto.Upload param, MultipartFile file) {
+        return fileModuleUtil.uploadSingleFileWithoutName(param.savePath, file);
     }
 
     /*******************************************************************************************
      * 단일 파일 업로드 - 파일명 입력 O
      *******************************************************************************************/
-    public FileDto uploadSingleFileWithName(FileParamDto.UploadWithName param, MultipartFile file) {
-        return fileService.uploadSingleFile(param.savePath, param.saveName, file);
+    public FileResponseDto uploadSingleFileWithName(FileParamDto.UploadWithName param, MultipartFile file) {
+        return fileModuleUtil.uploadSingleFileWithName(param.savePath, param.saveName, file);
     }
 
     /*******************************************************************************************
      * 복수 파일 업로드
      *******************************************************************************************/
-    public List<FileDto> uploadMultiFiles(FileParamDto.Upload param, MultipartFile[] files) {
-        return fileService.uploadMultiFiles(param.savePath, files);
+    public List<FileResponseDto> uploadMultiFiles(FileParamDto.Upload param, MultipartFile[] files) {
+        return fileModuleUtil.uploadMultiFiles(param.savePath, files);
     }
 
     /*******************************************************************************************
      * 파일 삭제
      *******************************************************************************************/
     public void deleteFile(String path) {
-        fileService.removeFile(path);
+        fileModuleUtil.deleteFile(path);
     }
 
     /*******************************************************************************************
      * 파일 다운로드
      *******************************************************************************************/
     public InputStreamResource downloadFile(String path) {
-        return fileService.downloadFile(path);
+        return fileModuleUtil.downloadFile(path);
     }
 
     /*******************************************************************************************
@@ -75,7 +74,7 @@ public class FileService {
      *******************************************************************************************/
     public String updateFileTempUrlOnRedis(String savePath, String saveName) {
         // 임시 URL 생성
-        String tempUrl = RD_KEY_TEMP_URL_PREFIX + fileUtil.generateFileTempUrl();
+        String tempUrl = RD_KEY_TEMP_URL_PREFIX + fileCommonUtilModuleUtil.generateFileTempUrl();
 
         // Redis Value 설정
         FileRedisDto redisDto = FileRedisDto.builder()
@@ -84,10 +83,11 @@ public class FileService {
                 .build();
 
         // Redis 업데이트
-        redisUtil.setRedisData(tempUrl, redisDto.toString());
+        redisModuleUtil.setRedisDataWithTTL(tempUrl, redisDto.toString());
 
         // 등록된 임시 URL 반환
         return tempUrl;
     }
+
 
 }
