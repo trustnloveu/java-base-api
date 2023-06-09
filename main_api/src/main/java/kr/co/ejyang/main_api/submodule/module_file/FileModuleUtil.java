@@ -20,14 +20,14 @@ public class FileModuleUtil {
     /*******************************************************************************************
      * 단일 파일 업로드 - 파일명 입력 X
      *******************************************************************************************/
-    public FileResponseDto uploadSingleFileWithoutName(String saveType, String savePath, MultipartFile file) {
+    public FileResponseDto uploadSingleFileWithoutName(String storageKey, String saveType, String savePath, MultipartFile file) {
 
-        FileDto fileDto = fileService.uploadSingleFile(saveType, savePath, file);
+        FileDto fileDto = fileService.uploadSingleFile(storageKey, saveType, savePath, file);
 
         return FileResponseDto.builder()
+                .storageKey(fileDto.getStorageKey())
                 .orgName(fileDto.getOrgName())
                 .saveName(fileDto.getSaveName())
-                .rootDirPath(fileDto.getRootDirPath())
                 .saveDirPath(fileDto.getSaveDirPath())
                 .fullPath(fileDto.getFullPath())
                 .url(fileDto.getUrl())
@@ -40,14 +40,14 @@ public class FileModuleUtil {
     /*******************************************************************************************
      * 단일 파일 업로드 - 파일명 입력 O
      *******************************************************************************************/
-    public FileResponseDto uploadSingleFileWithName(String saveType, String savePath, String saveName, MultipartFile file) {
+    public FileResponseDto uploadSingleFileWithName(String storageKey, String saveType, String savePath, String saveName, MultipartFile file) {
 
-        FileDto fileDto = fileService.uploadSingleFile(saveType, savePath, saveName, file);
+        FileDto fileDto = fileService.uploadSingleFile(storageKey, saveType, savePath, saveName, file);
 
         return FileResponseDto.builder()
+                .storageKey(fileDto.getStorageKey())
                 .orgName(fileDto.getOrgName())
                 .saveName(fileDto.getSaveName())
-                .rootDirPath(fileDto.getRootDirPath())
                 .saveDirPath(fileDto.getSaveDirPath())
                 .fullPath(fileDto.getFullPath())
                 .url(fileDto.getUrl())
@@ -60,16 +60,16 @@ public class FileModuleUtil {
     /*******************************************************************************************
      * 복수 파일 업로드
      *******************************************************************************************/
-    public List<FileResponseDto> uploadMultiFiles(String saveType, String savePath, MultipartFile[] files) {
+    public List<FileResponseDto> uploadMultiFiles(String storageKey, String saveType, String savePath, MultipartFile[] files) {
         List<FileResponseDto> rtnList = new ArrayList<>();
 
-        List<FileDto> fileDtoList = fileService.uploadMultiFiles(saveType, savePath, files);
+        List<FileDto> fileDtoList = fileService.uploadMultiFiles(storageKey, saveType, savePath, files);
 
         for (FileDto fileDto : fileDtoList) {
             rtnList.add(FileResponseDto.builder()
+                    .storageKey(fileDto.getStorageKey())
                     .orgName(fileDto.getOrgName())
                     .saveName(fileDto.getSaveName())
-                    .rootDirPath(fileDto.getRootDirPath())
                     .saveDirPath(fileDto.getSaveDirPath())
                     .fullPath(fileDto.getFullPath())
                     .url(fileDto.getUrl())
@@ -99,8 +99,15 @@ public class FileModuleUtil {
     /*******************************************************************************************
      * 파일 조회
      *******************************************************************************************/
-    public byte[] getFile(String savePath) {
-        return fileService.getFile(savePath);
+    public byte[] getPrivateFile(String savePath) {
+        return fileService.getPrivateFile(savePath);
+    }
+
+    /*******************************************************************************************
+     * 파일 조회
+     *******************************************************************************************/
+    public byte[] getPublicFile(String savePath) {
+        return fileService.getPublicFile(savePath);
     }
 
 }

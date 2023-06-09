@@ -29,7 +29,6 @@ public class FileService {
     private final FileCommonUtilModuleUtil fileCommonUtilModuleUtil;      // 파일 모듈 유틸
     private final RedisModuleUtil redisModuleUtil;    // 레디스 모듈
 
-
     // #########################################################################################
     //                                      [ PUBLIC ]
     // #########################################################################################
@@ -38,21 +37,37 @@ public class FileService {
      * 단일 파일 업로드 - 파일명 입력 X
      *******************************************************************************************/
     public FileResponseDto uploadSingleFileWithoutName(FileParamDto.Upload param, MultipartFile file) {
-        return fileModuleUtil.uploadSingleFileWithoutName(param.saveType, concatStorageKeyWithDirPath(param.storageKey, param.saveDirPath), file);
+        return fileModuleUtil.uploadSingleFileWithoutName(
+                param.storageKey,
+                param.saveType,
+                param.saveDirPath,
+                file
+        );
     }
 
     /*******************************************************************************************
      * 단일 파일 업로드 - 파일명 입력 O
      *******************************************************************************************/
     public FileResponseDto uploadSingleFileWithName(FileParamDto.UploadWithName param, MultipartFile file) {
-        return fileModuleUtil.uploadSingleFileWithName(param.saveType ,concatStorageKeyWithDirPath(param.storageKey, param.saveDirPath), param.saveName, file);
+        return fileModuleUtil.uploadSingleFileWithName(
+                param.storageKey,
+                param.saveType,
+                param.saveDirPath,
+                param.saveName,
+                file
+        );
     }
 
     /*******************************************************************************************
      * 복수 파일 업로드
      *******************************************************************************************/
     public List<FileResponseDto> uploadMultiFiles(FileParamDto.Upload param, MultipartFile[] files) {
-        return fileModuleUtil.uploadMultiFiles(param.saveType, concatStorageKeyWithDirPath(param.storageKey, param.saveDirPath), files);
+        return fileModuleUtil.uploadMultiFiles(
+                param.storageKey,
+                param.saveType,
+                param.saveDirPath,
+                files
+        );
     }
 
     /*******************************************************************************************
@@ -86,19 +101,7 @@ public class FileService {
         redisModuleUtil.setRedisDataWithTTL(tempUrl, redisDto.toStringJson());
 
         // 등록된 임시 URL 반환
-        return fileServerUrl + "/open/file/view/" + tempUrl;
-    }
-
-
-    // #########################################################################################
-    //                                      [ PRIVATE ]
-    // #########################################################################################
-
-    /*******************************************************************************************
-     * 저장 DIR 경로 완성 ( = /{스토리지 Key}/{사용자 입력 경로} )
-     *******************************************************************************************/
-    private String concatStorageKeyWithDirPath(String storageKey, String saveDirPath) {
-        return "/" + storageKey + saveDirPath;
+        return fileServerUrl + "/open/file/view/private/" + tempUrl;
     }
 
 }

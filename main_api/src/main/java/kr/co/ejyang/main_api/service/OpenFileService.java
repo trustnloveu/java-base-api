@@ -19,7 +19,8 @@ public class OpenFileService {
     private final RedisModuleUtil redisModuleUtil;
 
     /*******************************************************************************************
-     * 파일 조회
+     * 파일 조회 ( Private + Temp URL )
+     *  - Redis 조회 - 저장 경로
      *******************************************************************************************/
     public byte[] getFileByTempUrl(String tempUrl) throws FileNotFoundException {
         try {
@@ -32,11 +33,18 @@ public class OpenFileService {
                     .build();
 
             // 파일 조회
-            return fileModuleUtil.getFile(redisDto.savePath);
+            return fileModuleUtil.getPrivateFile(redisDto.savePath);
         } catch (NullPointerException e) {
             throw new FileNotFoundException("파일을 조회할 수 없습니다. ( Redis )");
         }
 
+    }
+
+    /*******************************************************************************************
+     * 파일 조회 ( Public )
+     *******************************************************************************************/
+    public byte[] getPublicFile(String savePath) {
+        return fileModuleUtil.getPublicFile(savePath);
     }
 
 }

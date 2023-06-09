@@ -1,5 +1,6 @@
 package kr.co.ejyang.main_api.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import kr.co.ejyang.main_api.service.OpenFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,11 +25,22 @@ public class OpenFileController {
     private final OpenFileService openFileService;
 
     /*******************************************************************************************
-     * 파일 조회 - 임시 URL 조회
+     * Private 파일 조회
      *******************************************************************************************/
-    @GetMapping(value = "/view/{tempUrl}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity viewFile(@PathVariable String tempUrl) throws FileNotFoundException {
+    @GetMapping(value = "/view/private/{tempUrl}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity viewPrivateFile(@PathVariable String tempUrl) throws FileNotFoundException {
         return new ResponseEntity<>(openFileService.getFileByTempUrl(tempUrl), HttpStatus.OK);
+    }
+
+    /*******************************************************************************************
+     * Public 파일 조회
+     *******************************************************************************************/
+    @GetMapping(value = "/view/**", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity viewPublicFile(HttpServletRequest request) {
+
+        String savePath = request.getRequestURI().split("/view")[1];
+
+        return new ResponseEntity<>(openFileService.getPublicFile(savePath), HttpStatus.OK);
     }
 
 }
