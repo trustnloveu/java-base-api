@@ -104,4 +104,11 @@ class ControllerExceptionHandler {
         return ResponseEntity.status(500).body(new ApiResponse<>("JSON 파싱 에러", "500", 500));
     }
 
+    // List Index 조회 에러
+    @ExceptionHandler( value = ArrayIndexOutOfBoundsException.class)
+    public ResponseEntity<?> ArrayIndexOutOfBoundsException(ArrayIndexOutOfBoundsException e) {
+        log.error(ExceptionUtils.getStackTrace(e));
+        return ResponseEntity.status(500).body(new ApiResponse<>(e.getMessage(), "400", 400));
+    }
+
 }
