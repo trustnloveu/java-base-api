@@ -1,22 +1,17 @@
 package kr.co.ejyang.main_api.submodule.module_redis;
 
 import kr.co.ejyang.module_redis.util.RedisUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 
+@RequiredArgsConstructor
 @Component
 public class RedisModuleUtil {
 
     private final RedisUtil redisUtil;
-
-    // 생성자
-    public RedisModuleUtil(@Autowired RedisUtil redisUtil) {
-        this.redisUtil = redisUtil;
-    }
-
 
     /*******************************************************************************************
      * Redis 갱신 - 유효시간 X

@@ -3,21 +3,17 @@ package kr.co.ejyang.main_api.submodule.module_exception_monitoring;
 import kr.co.ejyang.main_api.dto.MonitoringResponseDto;
 import kr.co.ejyang.module_exception_monitoring.dto.MonitoringDto;
 import kr.co.ejyang.module_exception_monitoring.service.MonitoringServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Component
 public class ExceptionMonitoringUtil {
 
     private final MonitoringServiceImpl monitoringService;
-
-    // 생성자
-    public ExceptionMonitoringUtil(@Autowired MonitoringServiceImpl monitoringService) {
-        this.monitoringService = monitoringService;
-    }
 
     // #########################################################################################
     //                                      [ PUBLIC ]

@@ -1,20 +1,16 @@
 package kr.co.ejyang.main_api.submodule.module_file_util;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.ejyang.module_file_util.util.FileCommonUtil;
 
+@RequiredArgsConstructor
 @Component
 public class FileCommonUtilModuleUtil {
 
     private final FileCommonUtil fileCommonUtil;
-
-    // 생성자
-    public FileCommonUtilModuleUtil(@Autowired FileCommonUtil fileCommonUtil) {
-        this.fileCommonUtil = fileCommonUtil;
-    }
 
     /*******************************************************************************************
      * 파일 검증 ( Null, 파일명, 용량, 확장자 )
