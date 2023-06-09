@@ -1,11 +1,10 @@
 package kr.co.ejyang.main_api.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import kr.co.ejyang.main_api.dto.FileParamDto;
 import kr.co.ejyang.main_api.service.FileService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,29 +15,22 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Validated
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/file")
 public class FileController {
 
     private final FileService fileService;
 
-    // 생성자
-    FileController(@Autowired FileService fileService) {
-        this.fileService = fileService;
-    }
-
-
     /*******************************************************************************************
      * 파일 조회 - 임시 URL 발급 ( Redis > Temp Url 등록 )
      *******************************************************************************************/
-    @GetMapping("/get-file-url/{savePath}/{saveName}")
+    @PostMapping("/generate-temp-url")
     public ResponseEntity generateFileTempUrl(
-            @NotBlank
-            @PathVariable String savePath,
-            @NotBlank
-            @PathVariable String saveName
+            @Valid
+            @RequestBody FileParamDto.TempUrl param
     ) {
-        return new ResponseEntity<>(fileService.updateFileTempUrlOnRedis(savePath, saveName), HttpStatus.OK);
+        return new ResponseEntity<>(fileService.updateFileTempUrlOnRedis(param.fullPath, param.fileName), HttpStatus.OK);
     }
 
 
@@ -81,13 +73,13 @@ public class FileController {
     /*******************************************************************************************
      * 파일 삭제
      *******************************************************************************************/
-    @DeleteMapping("/delete-file")
+    @PostMapping("/delete-file")
     public ResponseEntity deleteFile(
             @Valid
-            @RequestParam FileParamDto.Delete param
+            @RequestBody FileParamDto.Delete param
     ) {
-        fileService.deleteFile(param.savePath);
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        fileService.deleteFile(param.fullPath);
+        return new ResponseEntity<>("파일 삭제 성공", HttpStatus.OK);
     }
 
     /*******************************************************************************************
@@ -98,17 +90,17 @@ public class FileController {
             @Valid
             @RequestBody FileParamDto.Download param
     ) {
+        // 파일 확장자 확인
+        int dotIndex = param.fullPath.lastIndexOf(".");
+        String extType = param.fullPath.substring(dotIndex);
+
         // 반환 Header 설정
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.add("Content-Disposition", "filename=" + param.fileName);
+        headers.add("Content-Disposition", "filename=" + param.fileName + extType);
         headers.add("Set-Cookie", "fileDownload=true; path=/");
-        // headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+fileName);
-        // headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-        // headers.add("Pragma", "no-cache");
-        // headers.add("Expires", "0");
 
-        return new ResponseEntity<>(fileService.downloadFile(param.savePath), headers, HttpStatus.OK);
+        return new ResponseEntity<>(fileService.downloadFile(param.fullPath), headers, HttpStatus.OK);
     }
 
 }
