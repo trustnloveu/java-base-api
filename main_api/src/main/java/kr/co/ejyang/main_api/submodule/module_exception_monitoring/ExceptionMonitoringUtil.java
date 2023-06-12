@@ -2,7 +2,9 @@ package kr.co.ejyang.main_api.submodule.module_exception_monitoring;
 
 import kr.co.ejyang.main_api.dto.MonitoringResponseDto;
 import kr.co.ejyang.module_exception_monitoring.dto.MonitoringDto;
-import kr.co.ejyang.module_exception_monitoring.service.MonitoringServiceImpl;
+import kr.co.ejyang.module_exception_monitoring.service.MonitoringServiceImplDebug;
+import kr.co.ejyang.module_exception_monitoring.service.MonitoringServiceImplException;
+import kr.co.ejyang.module_exception_monitoring.service.MonitoringServiceImplSystem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +15,9 @@ import java.util.List;
 @Component
 public class ExceptionMonitoringUtil {
 
-    private final MonitoringServiceImpl monitoringService;
+    private final MonitoringServiceImplDebug monitoringServiceImplDebug;
+    private final MonitoringServiceImplSystem monitoringServiceImplSystem;
+    private final MonitoringServiceImplException monitoringServiceImplException;
 
     // #########################################################################################
     //                                      [ PUBLIC ]
@@ -27,14 +31,14 @@ public class ExceptionMonitoringUtil {
      * 에러 히스토리 조회 - 전체
      *******************************************************************************************/
     public List<MonitoringResponseDto> fetchAllExceptionHistory() {
-        return convertMonitoringDto(monitoringService.fetchAllExceptionHistory());
+        return convertMonitoringDto(monitoringServiceImplException.fetchAllExceptionHistory());
     }
 
     /*******************************************************************************************
      * 에러 히스토리 조회 - 검색 ( App 이름 )
      *******************************************************************************************/
     public List<MonitoringResponseDto> fetchExceptionHistoryBySearchWithAppName(String appName) {
-        return convertMonitoringDto(monitoringService.fetchExceptionHistoryBySearch(MonitoringDto.Select.builder()
+        return convertMonitoringDto(monitoringServiceImplException.fetchExceptionHistoryBySearch(MonitoringDto.Select.builder()
                 .appName(appName)
                 .build()));
     }
@@ -43,7 +47,7 @@ public class ExceptionMonitoringUtil {
      * 에러 히스토리 조회 - 검색 ( Level )
      *******************************************************************************************/
     public List<MonitoringResponseDto> fetchExceptionHistoryBySearchWithLevel(String level) {
-        return convertMonitoringDto(monitoringService.fetchExceptionHistoryBySearch(MonitoringDto.Select.builder()
+        return convertMonitoringDto(monitoringServiceImplException.fetchExceptionHistoryBySearch(MonitoringDto.Select.builder()
                 .level(level)
                 .build()));
     }
@@ -52,7 +56,7 @@ public class ExceptionMonitoringUtil {
      * 에러 히스토리 조회 - 검색 ( Status )
      *******************************************************************************************/
     public List<MonitoringResponseDto> fetchExceptionHistoryBySearchWithStatus(String status) {
-        return convertMonitoringDto(monitoringService.fetchExceptionHistoryBySearch(MonitoringDto.Select.builder()
+        return convertMonitoringDto(monitoringServiceImplException.fetchExceptionHistoryBySearch(MonitoringDto.Select.builder()
                 .status(status)
                 .build()));
     }
@@ -61,7 +65,7 @@ public class ExceptionMonitoringUtil {
      * 에러 히스토리 조회 - 검색 ( Type )
      *******************************************************************************************/
     public List<MonitoringResponseDto> fetchExceptionHistoryBySearchWithType(String type) {
-        return convertMonitoringDto(monitoringService.fetchExceptionHistoryBySearch(MonitoringDto.Select.builder()
+        return convertMonitoringDto(monitoringServiceImplException.fetchExceptionHistoryBySearch(MonitoringDto.Select.builder()
                 .type(type)
                 .build()));
     }
@@ -70,7 +74,7 @@ public class ExceptionMonitoringUtil {
      * 에러 히스토리 조회 - 검색 ( Detail )
      *******************************************************************************************/
     public List<MonitoringResponseDto> fetchExceptionHistoryBySearchWithDetail(String detail) {
-        return convertMonitoringDto(monitoringService.fetchExceptionHistoryBySearch(MonitoringDto.Select.builder()
+        return convertMonitoringDto(monitoringServiceImplException.fetchExceptionHistoryBySearch(MonitoringDto.Select.builder()
                 .detail(detail)
                 .build()));
     }
@@ -79,7 +83,7 @@ public class ExceptionMonitoringUtil {
      * 에러 히스토리 조회 - 검색 ( Message )
      *******************************************************************************************/
     public List<MonitoringResponseDto> fetchExceptionHistoryBySearchWithMessage(String message) {
-        return convertMonitoringDto(monitoringService.fetchExceptionHistoryBySearch(MonitoringDto.Select.builder()
+        return convertMonitoringDto(monitoringServiceImplException.fetchExceptionHistoryBySearch(MonitoringDto.Select.builder()
                 .message(message)
                 .build()));
     }
@@ -88,7 +92,7 @@ public class ExceptionMonitoringUtil {
      * 에러 히스토리 조회 - 검색 ( Alarm Y/N )
      *******************************************************************************************/
     public List<MonitoringResponseDto> fetchExceptionHistoryBySearchWithAlarmYn(String alarmYn) {
-        return convertMonitoringDto(monitoringService.fetchExceptionHistoryBySearch(MonitoringDto.Select.builder()
+        return convertMonitoringDto(monitoringServiceImplException.fetchExceptionHistoryBySearch(MonitoringDto.Select.builder()
                 .alarmYn(alarmYn)
                 .build()));
     }
@@ -97,7 +101,7 @@ public class ExceptionMonitoringUtil {
      * 에러 히스토리 조회 - 알람 미발송
      *******************************************************************************************/
     public List<MonitoringResponseDto> fetchAllExceptionHistoryAlarmNotSent() {
-        return convertMonitoringDto(monitoringService.fetchAllExceptionHistoryAlarmNotSent());
+        return convertMonitoringDto(monitoringServiceImplException.fetchAllExceptionHistoryAlarmNotSent());
     }
 
     // -----------------------------------------------------------------------------------------
@@ -108,7 +112,7 @@ public class ExceptionMonitoringUtil {
      * 에러 등록 ( App 이름 + Level )
      *******************************************************************************************/
     public void insertExceptionHistory(String appName, String level) {
-        monitoringService.insertExceptionHistory(MonitoringDto.Insert.builder()
+        monitoringServiceImplException.insertExceptionHistory(MonitoringDto.Insert.builder()
                 .appName(appName)
                 .level(level)
                 .build()
@@ -119,7 +123,7 @@ public class ExceptionMonitoringUtil {
      * 에러 등록 ( App 이름 + Level + Status )
      *******************************************************************************************/
     public void insertExceptionHistory(String appName, String level, String status) {
-        monitoringService.insertExceptionHistory(MonitoringDto.Insert.builder()
+        monitoringServiceImplException.insertExceptionHistory(MonitoringDto.Insert.builder()
                 .appName(appName)
                 .level(level)
                 .level(status)
@@ -131,7 +135,7 @@ public class ExceptionMonitoringUtil {
      * 에러 등록 ( App 이름 + Level + Status + Type )
      *******************************************************************************************/
     public void insertExceptionHistory(String appName, String level, String status, String type) {
-        monitoringService.insertExceptionHistory(MonitoringDto.Insert.builder()
+        monitoringServiceImplException.insertExceptionHistory(MonitoringDto.Insert.builder()
                 .appName(appName)
                 .level(level)
                 .status(status)
@@ -144,7 +148,7 @@ public class ExceptionMonitoringUtil {
      * 에러 등록 ( App 이름 + Level + Status + Type + detail )
      *******************************************************************************************/
     public void insertExceptionHistory(String appName, String level, String status, String type, String detail) {
-        monitoringService.insertExceptionHistory(MonitoringDto.Insert.builder()
+        monitoringServiceImplException.insertExceptionHistory(MonitoringDto.Insert.builder()
                 .appName(appName)
                 .level(level)
                 .status(status)
@@ -158,7 +162,7 @@ public class ExceptionMonitoringUtil {
      * 에러 등록 ( App 이름 + Level + Status + Type + detail + Message )
      *******************************************************************************************/
     public void insertExceptionHistory(String appName, String level, String status, String type, String detail, String message) {
-        monitoringService.insertExceptionHistory(MonitoringDto.Insert.builder()
+        monitoringServiceImplException.insertExceptionHistory(MonitoringDto.Insert.builder()
                 .appName(appName)
                 .level(level)
                 .status(status)
@@ -173,7 +177,7 @@ public class ExceptionMonitoringUtil {
      * 에러 등록 ( App 이름 + Level + Message )
      *******************************************************************************************/
     public void insertExceptionHistoryWithMessage(String appName, String level, String message) {
-        monitoringService.insertExceptionHistory(MonitoringDto.Insert.builder()
+        monitoringServiceImplException.insertExceptionHistory(MonitoringDto.Insert.builder()
                 .appName(appName)
                 .level(level)
                 .message(message)
@@ -185,7 +189,7 @@ public class ExceptionMonitoringUtil {
      * 에러 등록 ( App 이름 + Level + Type + Message )
      *******************************************************************************************/
     public void insertExceptionHistoryWithTypeAndMessage(String appName, String level, String type, String message) {
-        monitoringService.insertExceptionHistory(MonitoringDto.Insert.builder()
+        monitoringServiceImplException.insertExceptionHistory(MonitoringDto.Insert.builder()
                 .appName(appName)
                 .level(level)
                 .type(type)
@@ -202,7 +206,7 @@ public class ExceptionMonitoringUtil {
      * 에러 갱신 - 알람 발송 유무
      *******************************************************************************************/
     public void updateExceptionHistoryByAlarmSent(long idx) {
-        monitoringService.updateExceptionHistoryByAlarmSent(idx);
+        monitoringServiceImplException.updateExceptionHistoryByAlarmSent(idx);
     }
 
     // #########################################################################################
