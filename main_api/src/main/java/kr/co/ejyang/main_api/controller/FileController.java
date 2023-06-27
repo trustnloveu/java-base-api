@@ -3,16 +3,18 @@ package kr.co.ejyang.main_api.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import kr.co.ejyang.main_api.dto.FileParamDto;
+import kr.co.ejyang.main_api.model.ApiResponse;
 import kr.co.ejyang.main_api.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import static kr.co.ejyang.main_api.model.ApiResponse.returnByApiResponse;
 
 @Slf4j
 @Validated
@@ -27,11 +29,11 @@ public class FileController {
      * 파일 조회 - 임시 URL 발급 ( Redis > Temp Url 등록 )
      *******************************************************************************************/
     @PostMapping("/generate-temp-url")
-    public ResponseEntity generateFileTempUrl(
+    public ResponseEntity<ApiResponse> generateFileTempUrl(
             @Valid
             @RequestBody FileParamDto.TempUrl param
     ) {
-        return new ResponseEntity<>(fileService.updateFileTempUrlOnRedis(param.fullPath, param.fileName), HttpStatus.OK);
+        return returnByApiResponse(fileService.updateFileTempUrlOnRedis(param.fullPath, param.fileName));
     }
 
 
@@ -39,55 +41,54 @@ public class FileController {
      * 단일 파일 업로드 (1) - 파일 자체 이름으로 저장
      *******************************************************************************************/
     @PostMapping("/upload-file")
-    public ResponseEntity uploadSingleFileWithoutName(
+    public ResponseEntity<ApiResponse> uploadSingleFileWithoutName(
             @Valid
             @RequestPart(value = "param") FileParamDto.Upload param,
             @RequestParam(value = "file") MultipartFile file
     ) throws JsonProcessingException {
-        return new ResponseEntity<>(fileService.uploadSingleFileWithoutName(param, file), HttpStatus.OK);
+        return returnByApiResponse(fileService.uploadSingleFileWithoutName(param, file));
     }
 
     /*******************************************************************************************
      * 단일 파일 업로드 (2) - 사용자 지정 파일명으로 저장
      *******************************************************************************************/
     @PostMapping("/upload-named-file")
-    public ResponseEntity uploadSingleFileWithName(
+    public ResponseEntity<ApiResponse> uploadSingleFileWithName(
             @Valid
             @RequestPart(value = "param") FileParamDto.UploadWithName param,
             @RequestParam(value = "file") MultipartFile file
     ) throws JsonProcessingException {
-        return new ResponseEntity<>(fileService.uploadSingleFileWithName(param, file), HttpStatus.OK);
+        return returnByApiResponse(fileService.uploadSingleFileWithName(param, file));
     }
 
     /*******************************************************************************************
      * 복수 파일 업로드
      *******************************************************************************************/
     @PostMapping("/upload-files")
-    public ResponseEntity uploadMultiFiles(
+    public ResponseEntity<ApiResponse> uploadMultiFiles(
             @Valid
             @RequestPart(value = "param") FileParamDto.Upload param,
             @RequestParam(value = "files") MultipartFile[] files
     ) throws JsonProcessingException {
-        return new ResponseEntity<>(fileService.uploadMultiFiles(param, files), HttpStatus.OK);
+        return returnByApiResponse(fileService.uploadMultiFiles(param, files));
     }
 
     /*******************************************************************************************
      * 파일 삭제
      *******************************************************************************************/
     @PostMapping("/delete-file")
-    public ResponseEntity deleteFile(
+    public ResponseEntity<ApiResponse> deleteFile(
             @Valid
             @RequestBody FileParamDto.Delete param
     ) {
-        fileService.deleteFile(param.fullPath);
-        return new ResponseEntity<>("파일 삭제 성공", HttpStatus.OK);
+        return returnByApiResponse(fileService.deleteFile(param.fullPath));
     }
 
     /*******************************************************************************************
      * 파일 다운로드
      *******************************************************************************************/
     @PostMapping("/download-file")
-    public ResponseEntity downloadFile(
+    public ResponseEntity<ApiResponse> downloadFile(
             @Valid
             @RequestBody FileParamDto.Download param
     ) {
@@ -101,7 +102,7 @@ public class FileController {
         headers.add("Content-Disposition", "filename=" + param.fileName + extType);
         headers.add("Set-Cookie", "fileDownload=true; path=/");
 
-        return new ResponseEntity<>(fileService.downloadFile(param.fullPath), headers, HttpStatus.OK);
+        return returnByApiResponse(headers, fileService.downloadFile(param.fullPath));
     }
 
 }

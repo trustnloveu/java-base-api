@@ -3,6 +3,8 @@ package kr.co.ejyang.main_api.model;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 
 import java.io.Serializable;
 
@@ -20,6 +22,10 @@ public class ApiResponse implements Serializable {
 
     @Nullable
     private Object data;
+
+    // #########################################################################################
+    //                                      [ CONSTRUCTOR ]
+    // #########################################################################################
 
     /*******************************************************************************************
      * 생성자 (1)
@@ -72,35 +78,53 @@ public class ApiResponse implements Serializable {
     /*******************************************************************************************
      * 생성자 (5)
      * @param message       : 사용자 지정 메세지
-     * @param response      : 응답 코드 ( 로직, HTTP ), 반환 데이터
+     * @param responseCode  : 응답 코드 ( 로직, HTTP ), 반환 데이터
      *******************************************************************************************/
-    public ApiResponse(String message, ResponseCode response) {
+    public ApiResponse(String message, ResponseCode responseCode) {
         this.message = message;
-        this.code = response.getCode();
-        this.httpStatus = response.getHttpStatus();
+        this.code = responseCode.getCode();
+        this.httpStatus = responseCode.getHttpStatus();
     }
 
     /*******************************************************************************************
      * 생성자 (6)
      * @param message       : 사용자 지정 메세지
-     * @param response      : 응답 코드 ( 로직, HTTP ), 반환 데이터
+     * @param responseCode  : 응답 코드 ( 로직, HTTP ), 반환 데이터
      * @param data          : 반환 데이터
      *******************************************************************************************/
-    public ApiResponse(String message, ResponseCode response, Object data) {
+    public ApiResponse(String message, ResponseCode responseCode, Object data) {
         this.message = message;
-        this.code = response.getCode();
-        this.httpStatus = response.getHttpStatus();
+        this.code = responseCode.getCode();
+        this.httpStatus = responseCode.getHttpStatus();
         this.data = data;
     }
 
+    // #########################################################################################
+    //                                      [ METHOD ]
+    // #########################################################################################
 
-//    public boolean isSuccessReturn(){
-//        if(200 <= this.getHttpstatus() && this.getHttpstatus() < 230) return true;
-//        else return false;
-//    }
+    /*******************************************************************************************
+     * 메서드 (1)  - HTTP Response 반환
+     * @param apiResponse   : HttpStatus, Code, Message
+     *******************************************************************************************/
+    public static ResponseEntity<ApiResponse> returnByApiResponse(ApiResponse apiResponse) {
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
+    }
 
-//    public static ResponseEntity<?> returnByApiResponse(ApiResponse apiResponse){
-//        return ResponseEntity.status(apiResponse.getHttpstatus()).body(apiResponse);
-//    }
+    /*******************************************************************************************
+     * 메서드 (2)  - HTTP Response 반환
+     * @param headers       : HttpHeaders
+     * @param apiResponse   : HttpStatus, Code, Message
+     *******************************************************************************************/
+    public static ResponseEntity<ApiResponse> returnByApiResponse(HttpHeaders headers, ApiResponse apiResponse) {
+        return ResponseEntity.status(apiResponse.getHttpStatus()).headers(headers).body(apiResponse);
+    }
+
+    /*******************************************************************************************
+     * 메서드 (3)  - 성공 유무 확인
+     *******************************************************************************************/
+    public boolean isSuccessReturn() {
+        return 200 <= this.getHttpStatus() && this.getHttpStatus() < 230;
+    }
 
 }
