@@ -16,11 +16,11 @@ public class FileParamDto {
     public static class TempUrl {
         @NotBlank(message = "파일 경로가 입력되지 않았습니다.")
         @Pattern(regexp = "^\\/.*", message = "파일 경로는 '/'로 시작되어야 합니다.")
-        @Pattern(regexp = "^[A-Za-z0-9가-힣./_-]+$", message = "입력한 경로에 '.', '/', '-', '_'를 제외한 특수문자 사용은 불가능합니다.")
+        @Pattern(regexp = "^[A-Za-z0-9가-힣./_-]+[^ ]*$", message = "입력한 경로에 '.', '/', '-', '_'를 제외한 특수문자 및 공백문자 사용은 불가능합니다.")
         public String fullPath;
 
         @NotBlank(message = "파일명이 입력되지 않았습니다.")
-        @Pattern(regexp = "^[A-Za-z0-9가-힣./_-]+$", message = "입력한 경로에 '.', '/', '-', '_'를 제외한 특수문자 사용은 불가능합니다.")
+        @Pattern(regexp = "^[A-Za-z0-9가-힣./_-]+[^ ]*$", message = "입력한 경로에 '.', '/', '-', '_'를 제외한 특수문자 및 공백문자 사용은 불가능합니다.")
         public String fileName;
     }
 
@@ -41,7 +41,7 @@ public class FileParamDto {
 
         @NotBlank(message = "파일 경로가 입력되지 않았습니다.")
         @Pattern(regexp = "^\\/.*", message = "파일 경로는 '/'로 시작되어야 합니다.")
-        @Pattern(regexp = "^[A-Za-z0-9가-힣./_-]+$", message = "입력한 경로에 '.', '/', '-', '_'를 제외한 특수문자 사용은 불가능합니다.")
+        @Pattern(regexp = "^[A-Za-z0-9가-힣./_-]+[^ ]*$", message = "입력한 경로에 '.', '/', '-', '_'를 제외한 특수문자 및 공백문자 사용은 불가능합니다.")
         public String saveDirPath;
     }
 
@@ -63,11 +63,11 @@ public class FileParamDto {
 
         @NotBlank(message = "파일 경로가 입력되지 않았습니다.")
         @Pattern(regexp = "^\\/.*", message = "파일 경로는 '/'로 시작되어야 합니다.")
-        @Pattern(regexp = "^[A-Za-z0-9가-힣./_-]+$", message = "입력한 경로에 '.', '/', '-', '_'를 제외한 특수문자 사용은 불가능합니다.")
+        @Pattern(regexp = "^[A-Za-z0-9가-힣./_-]+[^ ]*$", message = "입력한 경로에 '.', '/', '-', '_'를 제외한 특수문자 및 공백문자 사용은 불가능합니다.")
         public String saveDirPath;
 
         @NotBlank(message = "저장 파일명이 입력되지 않았습니다.")
-        @Pattern(regexp = "^[A-Za-z0-9가-힣./_-]+$", message = "입력한 경로에 '.', '/', '-', '_'를 제외한 특수문자 사용은 불가능합니다.")
+        @Pattern(regexp = "^[A-Za-z0-9가-힣./_-]+[^ ]*$", message = "입력한 경로에 '.', '/', '-', '_'를 제외한 특수문자 및 공백문자 사용은 불가능합니다.")
         public String saveName;
     }
 
@@ -80,7 +80,7 @@ public class FileParamDto {
     public static class Download {
         @NotBlank(message = "파일 경로가 입력되지 않았습니다.")
         @Pattern(regexp = "^\\/.*", message = "파일 경로는 '/'로 시작되어야 합니다.")
-        @Pattern(regexp = "^[A-Za-z0-9가-힣./_-]+$", message = "입력한 경로에 '.', '/', '-', '_'를 제외한 특수문자 사용은 불가능합니다.")
+        @Pattern(regexp = "^[A-Za-z0-9가-힣./_-]+[^ ]*$", message = "입력한 경로에 '.', '/', '-', '_'를 제외한 특수문자 및 공백문자 사용은 불가능합니다.")
         public String fullPath;
 
         @NotBlank(message = "파일명이 입력되지 않았습니다.")
@@ -102,7 +102,7 @@ public class FileParamDto {
 
         @NotBlank(message = "파일 경로가 입력되지 않았습니다.")
         @Pattern(regexp = "^\\/.*", message = "파일 경로는 '/'로 시작되어야 합니다.")
-        @Pattern(regexp = "^[A-Za-z0-9가-힣./_-]+$", message = "입력한 경로에 '.', '/', '-', '_'를 제외한 특수문자 사용은 불가능합니다.")
+        @Pattern(regexp = "^[A-Za-z0-9가-힣./_-]+[^ ]*$", message = "입력한 경로에 '.', '/', '-', '_'를 제외한 특수문자 및 공백문자 사용은 불가능합니다.")
         public String fullPath;
     }
 

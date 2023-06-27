@@ -3,9 +3,8 @@ package kr.co.ejyang.main_api.exception;
 import com.fasterxml.jackson.core.JsonParseException;
 import kr.co.ejyang.main_api.model.ApiResponse;
 import kr.co.ejyang.module_file.exception.FileModuleException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.validation.BindingResult;
@@ -14,6 +13,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.io.FileNotFoundException;
@@ -21,10 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+@Slf4j
 @RestControllerAdvice
 class ControllerExceptionHandler {
-
-    private static final Logger log = LogManager.getLogger(ControllerExceptionHandler.class);
 
     // 글로벌 에러
     @ExceptionHandler( value = Exception.class)
@@ -40,18 +39,25 @@ class ControllerExceptionHandler {
         return ResponseEntity.status(500).body(new ApiResponse<>("런타임 에러","500",500));
     }
 
-    // 파일 에러
+    // 파일 에러 - CURD 실패
     @ExceptionHandler( value = FileModuleException.class)
     public ResponseEntity<?> FileModuleException(FileModuleException e) {
         log.error(ExceptionUtils.getStackTrace(e));
-        return ResponseEntity.status(500).body(new ApiResponse<>(e.getMessage(),"400",400));
+        return ResponseEntity.status(500).body(new ApiResponse<>(e.getMessage(),"500",500));
     }
 
-    // 파일 에러
+    // 파일 에러 - 탐색실패
     @ExceptionHandler( value = FileNotFoundException.class)
     public ResponseEntity<?> FileNotFoundException(FileNotFoundException e) {
         log.error(ExceptionUtils.getStackTrace(e));
-        return ResponseEntity.status(500).body(new ApiResponse<>(e.getMessage(),"400",400));
+        return ResponseEntity.status(500).body(new ApiResponse<>("파일 탐색 실패","500",500));
+    }
+
+    // 파일 에러 - 용량 초과
+    @ExceptionHandler( value = MaxUploadSizeExceededException.class)
+    public ResponseEntity<?> maxUploadSizeExceededException(MaxUploadSizeExceededException e) {
+        log.error(ExceptionUtils.getStackTrace(e));
+        return ResponseEntity.status(500).body(new ApiResponse<>("업로드 용량 초과","500",500));
     }
 
     // DTO 객체 검증 에러
@@ -73,21 +79,21 @@ class ControllerExceptionHandler {
     @ExceptionHandler( value = MissingServletRequestPartException.class)
     public ResponseEntity<?> httpRequestMethodNotSupportedException(MissingServletRequestPartException e) {
         log.error(ExceptionUtils.getStackTrace(e));
-        return ResponseEntity.status(400).body(new ApiResponse<>(e.getMessage(),"400",400));
+        return ResponseEntity.status(400).body(new ApiResponse<>("첨부파일 누락","400",400));
     }
 
     // HTTP Method 에러
     @ExceptionHandler( value = HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<?> httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         log.error(ExceptionUtils.getStackTrace(e));
-        return ResponseEntity.status(403).body(new ApiResponse<>("forbidden","403",403));
+        return ResponseEntity.status(403).body(new ApiResponse<>("잘못된 접근","403",403));
     }
 
     // Request 파라미터 에러
     @ExceptionHandler( value = HttpMessageConversionException.class)
     public ResponseEntity<?> HttpMessageConversionException(HttpMessageConversionException e) {
         log.error(ExceptionUtils.getStackTrace(e));
-        return ResponseEntity.status(400).body(new ApiResponse<>("잘못된 요청입니다.","400",400));
+        return ResponseEntity.status(400).body(new ApiResponse<>("잘못된 요청","400",400));
     }
 
     // Java 라이브러리러 Build 에러

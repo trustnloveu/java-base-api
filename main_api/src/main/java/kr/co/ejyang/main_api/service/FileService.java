@@ -6,6 +6,7 @@ import kr.co.ejyang.main_api.dto.FileResponseDto;
 import kr.co.ejyang.main_api.submodule.module_file.FileModuleUtil;
 import kr.co.ejyang.main_api.submodule.module_file_util.FileCommonUtilModuleUtil;
 import kr.co.ejyang.main_api.submodule.module_redis.RedisModuleUtil;
+import kr.co.ejyang.module_file.exception.FileModuleException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static kr.co.ejyang.main_api.config.CommonConsts.RD_KEY_TEMP_URL_PREFIX;
 
@@ -37,6 +39,12 @@ public class FileService {
      * 단일 파일 업로드 - 파일명 입력 X
      *******************************************************************************************/
     public FileResponseDto uploadSingleFileWithoutName(FileParamDto.Upload param, MultipartFile file) {
+
+        boolean isValid = validateFileName(file);
+
+        if (!isValid)
+            throw new FileModuleException("파일명에 '.', '/', '-', '_'를 제외한 특수문자 및 공백문자를 허용하지 않습니다.");
+
         return fileModuleUtil.uploadSingleFileWithoutName(
                 param.storageKey,
                 param.saveType,
@@ -49,6 +57,12 @@ public class FileService {
      * 단일 파일 업로드 - 파일명 입력 O
      *******************************************************************************************/
     public FileResponseDto uploadSingleFileWithName(FileParamDto.UploadWithName param, MultipartFile file) {
+
+        boolean isValid = validateFileName(file);
+
+        if (!isValid)
+            throw new FileModuleException("파일명에 '.', '/', '-', '_'를 제외한 특수문자 및 공백문자를 허용하지 않습니다.");
+
         return fileModuleUtil.uploadSingleFileWithName(
                 param.storageKey,
                 param.saveType,
@@ -62,6 +76,14 @@ public class FileService {
      * 복수 파일 업로드
      *******************************************************************************************/
     public List<FileResponseDto> uploadMultiFiles(FileParamDto.Upload param, MultipartFile[] files) {
+
+        for (MultipartFile file : files) {
+            boolean isValid = validateFileName(file);
+
+            if (!isValid)
+                throw new FileModuleException("파일명에 '.', '/', '-', '_'를 제외한 특수문자 및 공백문자를 허용하지 않습니다.");
+        }
+
         return fileModuleUtil.uploadMultiFiles(
                 param.storageKey,
                 param.saveType,
@@ -102,6 +124,20 @@ public class FileService {
 
         // 등록된 임시 URL 반환
         return fileServerUrl + "/open/file/view/private/" + tempUrl;
+    }
+
+    // #########################################################################################
+    //                                      [ PRIVATE ]
+    // #########################################################################################
+
+    /*******************************************************************************************
+     * 파일명 검증 - '.', '/', '-', '_'를 제외한 특수문자 및 공백문자 사용 불가
+     *******************************************************************************************/
+    private boolean validateFileName(MultipartFile file) {
+        String fileName = file.getOriginalFilename();
+        String regExp = "^[A-Za-z0-9가-힣./_-]+[^ ]*$";
+
+        return Pattern.matches(regExp, fileName);
     }
 
 }

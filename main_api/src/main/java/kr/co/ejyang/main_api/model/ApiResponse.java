@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.http.ResponseEntity;
 
 import java.io.Serializable;
 
@@ -29,12 +28,12 @@ public class ApiResponse<T> implements Serializable {
         this.httpstatus = httpstatus;
     }
 
-//    public ApiResponse(String message, String code, Integer httpstatus, T data) {
-//        this.message = message;
-//        this.code = code;
-//        this.httpstatus = httpstatus;
-//        this.data = data;
-//    }
+    public ApiResponse(String message, String code, Integer httpstatus, T data) {
+        this.message = message;
+        this.code = code;
+        this.httpstatus = httpstatus;
+        this.data = data;
+    }
 
 //    public boolean isSuccessReturn(){
 //        if(200 <= this.getHttpstatus() && this.getHttpstatus() < 230) return true;
