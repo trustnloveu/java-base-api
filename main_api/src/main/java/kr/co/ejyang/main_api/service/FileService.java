@@ -1,8 +1,11 @@
 package kr.co.ejyang.main_api.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.ejyang.main_api.dto.FileParamDto;
 import kr.co.ejyang.main_api.dto.FileRedisDto;
 import kr.co.ejyang.main_api.dto.FileResponseDto;
+import kr.co.ejyang.main_api.model.ApiResponse;
 import kr.co.ejyang.main_api.submodule.module_file.FileModuleUtil;
 import kr.co.ejyang.main_api.submodule.module_file_util.FileCommonUtilModuleUtil;
 import kr.co.ejyang.main_api.submodule.module_redis.RedisModuleUtil;
@@ -38,19 +41,19 @@ public class FileService {
     /*******************************************************************************************
      * 단일 파일 업로드 - 파일명 입력 X
      *******************************************************************************************/
-    public FileResponseDto uploadSingleFileWithoutName(FileParamDto.Upload param, MultipartFile file) {
+    public ApiResponse uploadSingleFileWithoutName(FileParamDto.Upload param, MultipartFile file) throws JsonProcessingException {
 
         boolean isValid = validateFileName(file);
 
         if (!isValid)
             throw new FileModuleException("파일명에 '.', '/', '-', '_'를 제외한 특수문자 및 공백문자를 허용하지 않습니다.");
 
-        return fileModuleUtil.uploadSingleFileWithoutName(
+        return new ApiResponse("success", "200", 200, new ObjectMapper().writeValueAsString(fileModuleUtil.uploadSingleFileWithoutName(
                 param.storageKey,
                 param.saveType,
                 param.saveDirPath,
                 file
-        );
+        )));
     }
 
     /*******************************************************************************************

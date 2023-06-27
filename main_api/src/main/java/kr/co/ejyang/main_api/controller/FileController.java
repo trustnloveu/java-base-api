@@ -1,5 +1,6 @@
 package kr.co.ejyang.main_api.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import kr.co.ejyang.main_api.dto.FileParamDto;
 import kr.co.ejyang.main_api.service.FileService;
@@ -42,7 +43,7 @@ public class FileController {
             @Valid
             @RequestPart(value = "param") FileParamDto.Upload param,
             @RequestParam(value = "file") MultipartFile file
-    ) {
+    ) throws JsonProcessingException {
         return new ResponseEntity<>(fileService.uploadSingleFileWithoutName(param, file), HttpStatus.OK);
     }
 
@@ -54,7 +55,7 @@ public class FileController {
             @Valid
             @RequestPart(value = "param") FileParamDto.UploadWithName param,
             @RequestParam(value = "file") MultipartFile file
-    ) {
+    ) throws JsonProcessingException {
         return new ResponseEntity<>(fileService.uploadSingleFileWithName(param, file), HttpStatus.OK);
     }
 
@@ -66,7 +67,7 @@ public class FileController {
             @Valid
             @RequestPart(value = "param") FileParamDto.Upload param,
             @RequestParam(value = "files") MultipartFile[] files
-    ) {
+    ) throws JsonProcessingException {
         return new ResponseEntity<>(fileService.uploadMultiFiles(param, files), HttpStatus.OK);
     }
 
